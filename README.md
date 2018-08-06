@@ -1,7 +1,2 @@
 # python-bodmas-calculator
-A Python Calculator, which follows the BODMAS rule.
-
-TODO List:
-	Add '!' To The calculator. 
-	Solve QUADRATIC EQUATIONS.
-
+Was getting bored so decided to code a calculator which follows the BODMAS rule, instead of using eval() function inbuilt in python.
