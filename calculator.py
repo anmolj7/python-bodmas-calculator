@@ -92,7 +92,7 @@ class Calculator:
 
 while True:
 	try:
-		cal = Calculator(raw_input("Enter An Equation: "))
-		print cal.result
+		cal = Calculator(raw_input("Enter An Equation: ")) #You may need to change raw_input to input if you are using python 3
+		print(cal.result)
 	except:
-		print "Sorry There's an error"
+		print("Sorry There's an error")
