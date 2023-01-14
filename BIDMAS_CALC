@@ -1,0 +1,100 @@
+class Calculate:
+
+    def __init__(self, input):
+        self.nums = ["1","2","3","4","5","6","7","8","9","0", ".", "-"]
+        self.ops = ["_", "+", "/", "*", "^"]
+        self.BIDMASord = [["^","^"], ["*","/"], ["+","_"]]
+        input = self.format(input)
+        step = 1
+        print("")
+        while True:
+            innerbracket = self.getinnerbracket(input)[0]
+            sib = self.solve(innerbracket)
+            input = input.replace(innerbracket, str(sib))
+            ops_num = len([i for i in input if i in self.ops])
+            if not ops_num:
+                if not step == 1:
+                    print("")
+                break
+            print(f"{step}: {input}")
+            step += 1
+        print(f"ANS: {input}\n")
+
+    def format(self, input):
+        input = input.replace(" ", "")
+        list = ["1","2","3","4","5","6","7","8","9","0", ")"]
+        inputlist = [i for i in input]
+        for a, b in enumerate(inputlist):
+            if not a == 0:
+                if b == "-" and inputlist[a-1] in list:
+                    inputlist.pop(a)
+                    inputlist.insert(a, "_")
+                if b in self.nums and inputlist[a-1] == ")":
+                    inputlist.insert(a, "*")
+            if not a == len(inputlist) - 1:
+                if b in self.nums and inputlist[a+1] == "(":
+                    inputlist.insert(a+1, "*")
+        input = "".join(inputlist)
+        return input
+
+    def getinnerbracket(self, input):
+        openbracket = False
+        closebracket = False
+        bracketsnum = len([a for a, b in enumerate(input) if b == "(" or b == ")"])
+        if bracketsnum > 1:
+            for a, b in enumerate(input):
+                if b == "(":
+                    openbracket = a
+                elif b == ")":
+                    closebracket = a
+                    break
+            result = input[openbracket:closebracket+1]
+        else:
+            result = input
+        return result, openbracket, closebracket+1
+
+    def solve(self, input):
+        input = input.replace("(", "")
+        input = input.replace(")", "")
+        nums = [char for char in input if char in self.nums]
+        ops = [char for char in input if char in self.ops]
+        nums = ""
+        ops = []
+        for char in input:
+            if char in self.nums:
+                nums += char
+            elif char in self.ops:
+                ops.append(char)
+                nums += " "
+        nums = nums.split(" ")
+        while ops:
+            ord_ops = [[a, b] for i in self.BIDMASord for a, b in enumerate(ops) if b == i[0] or b == i[1]]
+            i = ord_ops[0]
+            if i[1] == "^":
+                ans = float(nums[i[0]]) ** float(nums[i[0]+1])
+            elif i[1] == "*":
+                ans = float(nums[i[0]]) * float(nums[i[0]+1])
+            elif i[1] == "/":
+                ans = float(nums[i[0]]) / float(nums[i[0]+1])
+            elif i[1] == "+":
+                ans = float(nums[i[0]]) + float(nums[i[0]+1])
+            elif i[1] == "_":
+                ans = float(nums[i[0]]) - float(nums[i[0]+1])
+            ans = str(ans).replace("(", "")
+            ans = ans.replace(")", "")
+            if len(str(ans)[str(ans).find(".")+1:-1]) > 16:
+                ans = str(ans)[0:str(ans).find(".")+17]
+            ops.remove(ops[i[0]])
+            for DoThisTwice in range(2):
+                nums.remove(nums[i[0]])
+            nums.insert(i[0], float(ans))
+            ord_ops.remove(i)
+        return nums[0]
+        
+print("=" * 10, "\n")
+while True:
+    try:
+        Calculate(input())
+    except:
+        print("error, check syntax and try again.\n")
+    print("=" * 10, "\n")
